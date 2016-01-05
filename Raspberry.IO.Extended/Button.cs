@@ -2,22 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Raspberry.IO.GeneralPurpose;
 
 namespace Raspberry.IO.Extended
 {
-    public class Button
+    public class Button:IDisposable
     {
 
-
+        
 
         public Button(InputPinConfiguration outputPin, IGpioConnectionDriver driver = null)
         {
             PinConfig = outputPin;
             Driver = driver ?? GpioConnectionSettings.DefaultDriver;
             Driver.Allocate(PinConfig.Pin, PinDirection.Output);
+            TokenScource=  new System.Threading.CancellationTokenSource();
+            Action a = Watch;
+            Task.Run(a,TokenScource.Token);
+           // Task.Start(Watch);
             
+        }
+        public Action<bool> StatusChangedAction
+        {
+            get { return this.PinConfig.StatusChangedAction; }
+            set { this.PinConfig.StatusChangedAction = value; }
+        }
+        public  CancellationTokenSource TokenScource
+        {
+            get; set;
         }
         void Watch ()
         {
@@ -50,10 +64,7 @@ namespace Raspberry.IO.Extended
             {
                 return Driver.Read(PinConfig.Pin);
             }
-            set
-            {
-                Driver.Write(PinConfig.Pin, value);
-            }
+           
         }
 
         public IGpioConnectionDriver Driver { get; private set; }
@@ -70,22 +81,11 @@ namespace Raspberry.IO.Extended
         {
             Driver.Write(PinConfig.Pin, false);
         }
-        public void Toggle()
+      
+        public void Dispose()
         {
-            var state = Driver.Read(PinConfig.Pin);
-            Driver.Write(PinConfig.Pin, !state);
+            Driver.Release(this.PinConfig.Pin);
+            TokenScource.Dispose();
         }
-        public void Blink(TimeSpan duration, TimeSpan? speed = null)
-        {
-            speed = speed ?? TimeSpan.FromMilliseconds(200);
-            var max = DateTime.Now.Add(duration);
-            while (DateTime.Now < max)
-            {
-                Toggle();
-                Raspberry.Timers.Timer.Sleep(speed.Value);
-            }
-            Off();
-        }
-
     }
 }

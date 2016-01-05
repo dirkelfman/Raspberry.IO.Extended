@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>Raspberry.IO.Extended</id>
-    <version>1.0.0-alpha1</version>
-    <title>Raspberry.IO.Extended.Nuget</title>
+    <version>1.0.0-alpha2</version>
+    <title>Raspberry.IO.Extended</title>
     <authors>thomas_phipps</authors>
     <owners></owners>
     <description>
@@ -15,7 +15,7 @@
       A short description of the package. If specified, this shows up in the middle pane of the Add Package Dialog. If not specified, a truncated version of the description is used instead.
     </summary>
     <language>en-US</language>
-    <projectUrl>https://nuget.org/packages/Raspberry.IO.Extended.Nuget</projectUrl>
+    <projectUrl>https://github.com/dirkelfman/Raspberry.IO.Extended</projectUrl>
     <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
